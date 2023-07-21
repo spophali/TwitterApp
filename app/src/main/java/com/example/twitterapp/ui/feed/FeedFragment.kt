@@ -35,6 +35,14 @@ class FeedFragment : Fragment() {
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        feedViewModel.feedLiveData.observe(viewLifecycleOwner){ feedList ->
+            val feedAdapter = FeedAdapter(feedList)
+            binding.feedRecyclerView.adapter = feedAdapter
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
