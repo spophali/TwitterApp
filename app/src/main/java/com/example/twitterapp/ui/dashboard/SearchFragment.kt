@@ -1,4 +1,4 @@
-package com.example.twitterapp.ui.profile
+package com.example.twitterapp.ui.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.example.twitterapp.databinding.FragmentProfileBinding
+import com.example.twitterapp.databinding.FragmentSearchBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProfileFragment : Fragment() {
+class SearchFragment : Fragment() {
 
-    private val profileViewModel: ProfileViewModel by viewModel()
-    private var _binding: FragmentProfileBinding? = null
-
+    private val searchViewModel: SearchViewModel by viewModel()
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,14 +21,14 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        profileViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textProfile.text = it
+        searchViewModel.text.observe(viewLifecycleOwner, Observer {
+            binding.textSearch.text = it
         })
     }
 

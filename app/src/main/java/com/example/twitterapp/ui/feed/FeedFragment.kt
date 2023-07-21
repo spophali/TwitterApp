@@ -1,22 +1,20 @@
 package com.example.twitterapp.ui.feed
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.twitterapp.databinding.FragmentFeedBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 class FeedFragment : Fragment() {
 
     private val feedViewModel: FeedViewModel by viewModel()
     private var _binding: FragmentFeedBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -24,23 +22,41 @@ class FeedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        feedViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        feedViewModel.feedLiveData.observe(viewLifecycleOwner){ feedList ->
-            val feedAdapter = FeedAdapter(feedList)
-            binding.feedRecyclerView.adapter = feedAdapter
+        feedViewModel.loadingLiveData.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.isVisible = isLoading
         }
+        feedViewModel.feedLiveData.observe(viewLifecycleOwner) { feedList ->
+            binding.errorMsgTv.isVisible = false
+            binding.feedRecyclerView.apply {
+                isVisible = true
+                adapter = FeedAdapter(feedList)
+            }
+        }
+
+        feedViewModel.errorLiveData.observe(viewLifecycleOwner) { errMsg ->
+            binding.feedRecyclerView.isVisible = false
+            binding.errorMsgTv.apply {
+                isVisible = true
+                text = errMsg
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.i("FF", "SMP onStart: ")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i("FF", "SMP onStop: ")
+
     }
 
     override fun onDestroyView() {
