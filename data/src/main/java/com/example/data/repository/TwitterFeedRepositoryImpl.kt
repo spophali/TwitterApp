@@ -10,11 +10,8 @@ class TwitterFeedRepositoryImpl(
     private val twitterRetrofitClient: TwitterRetrofitClient
 ) : FeedRepository {
     override suspend fun getFeedData(): List<Feed> = withContext(Dispatchers.IO) {
-        val feedData = twitterRetrofitClient.getTwitterApiService().getFeedData()
-        val feedList = arrayListOf<Feed>()
-        feedData.forEach {
-            feedList.add(it.toFeed())
+        twitterRetrofitClient.getTwitterApiService().getFeedData().map {
+            it.toFeed()
         }
-        feedList
     }
 }
