@@ -1,7 +1,6 @@
 package com.example.twitterapp.ui.feed
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,9 +27,11 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        feedViewModel.getFeedData()
         feedViewModel.loadingLiveData.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.isVisible = isLoading
         }
+
         feedViewModel.feedLiveData.observe(viewLifecycleOwner) { feedList ->
             binding.errorMsgTv.isVisible = false
             binding.feedRecyclerView.apply {
@@ -46,17 +47,6 @@ class FeedFragment : Fragment() {
                 text = errMsg
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.i("FF", "SMP onStart: ")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.i("FF", "SMP onStop: ")
-
     }
 
     override fun onDestroyView() {
